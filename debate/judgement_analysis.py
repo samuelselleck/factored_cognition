@@ -1,12 +1,8 @@
 
 # notes/questions/thoughts:
 
-# - This made me understand why ICE is useful!
-
-# - GPT-3 is very unreasonable a lot of the time in debates...
-
 # - Really hard to not let information symmetry
-#   in the queries to affect the outcome (ordering, names etc.).
+#   in the queries affect the outcome (ordering, names etc.).
 #   Tried to avoid to some extend by choosing neutral names
 #   or doing douple queries (with switched order) - other methods?
 
@@ -14,6 +10,10 @@
 #   this did not work at all (almost always completed with 5).
 #   is there a way to get semi-uniform  numerical classifications
 #   out of an LLM in a reasonable way?
+
+# - This made me understand why ICE is useful!
+
+# - GPT-3 is very unreasonable a lot of the time in debates.
 
 from ice.recipe import recipe
 
