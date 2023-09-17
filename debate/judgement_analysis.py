@@ -6,14 +6,23 @@
 #   Tried to avoid to some extend by choosing neutral names
 #   or doing douple queries (with switched order) - other methods?
 
-# - Initially I tried to get the judgement be a number (0-10).
+# - Initially tried to get the judgement be a number (0-10).
 #   this did not work at all (almost always completed with 5).
 #   is there a way to get semi-uniform  numerical classifications
 #   out of an LLM in a reasonable way?
 
-# - This made me understand why ICE is useful!
+# - Hallucination/repetition very common in debates, even with
+#   prompt trying to promote reason! Ways to reduce this?
 
-# - GPT-3 is very unreasonable a lot of the time in debates.
+# - Being in favor/against didn't necessarily always translate to
+#   answering "Yes" or "No" to the question! ICE was very useful in
+#   figuring this out
+
+# - I couldn't see a very clear pattern in response differences
+#   between oneshot/debate answerers. The answer did however
+#   fluctuate considerably depending on precise wording in
+#   debate prompt/qustion prompt. I'd be interested in what
+#   you observed!
 
 from ice.recipe import recipe
 
@@ -24,7 +33,8 @@ from prompt import debate_judgement_prompts, oneshot_prompt, questions_prompt
 async def judgement_analysis():
     prompt = questions_prompt(10)
     questions = (await recipe.agent()
-                 .complete(prompt=prompt, stop="---")).split("\n")
+                 .complete(prompt=prompt, stop="---", max_tokens=500))\
+        .split("\n")
     all_judgements = {}
     for question in questions:
         debate_res = await debate_judgement(question)
@@ -46,13 +56,21 @@ async def debate_judgement(question: str) -> str:
     agent_names = ["Proponent", "Opponent"]
     debate = await debate_question(question, agent_names)
     prompts = debate_judgement_prompts(debate, agent_names)
-    results = []
+    permutation_results = []
     for p in prompts:
         answer = await recipe.agent().complete(prompt=p, stop='"')
-        results.append(answer)
+        permutation_results.append(answer)
 
-    if all((a == results[0] for a in results)):
-        return results[0]
+    translate = {
+        "Proponent": "Yes",
+        "Opponent": "No",
+    }
+    r = permutation_results[0]
+    if all((a == r for a in permutation_results)):
+        if r in translate:
+            return translate[r]
+        else:
+            return r
     else:
         return "Mixed"
 

@@ -8,8 +8,8 @@ from debate_types import Message, Debate, Name
 def initialize_debate(question: Message) -> Debate:
     return [
         ("Question", question),
-        ("Proponent", "I'm in favor."),
-        ("Opponent", "I'm against."),
+        ("Proponent", "Yes."),
+        ("Opponent", "No. Why?"),
     ]
 
 

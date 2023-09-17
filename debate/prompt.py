@@ -1,4 +1,3 @@
-import itertools
 from fvalues import F
 
 from debate_types import Debate, Name
@@ -8,7 +7,11 @@ from utils import render_debate, render_list_permutations
 def render_debate_prompt(agent_name: str, debate: Debate, turns_left: int) -> str:
     prompt = F(
         f"""
-You are {agent_name}. There are {turns_left} turns left in the debate. You are trying to win the debate using reason and evidence. Don't repeat yourself. No more than 1-2 sentences per turn.
+* There are {turns_left} turns left in the debate.
+* You are the {agent_name}.
+* You are trying to win the debate using reason and evidence.
+* Don't repeat yourself.
+* No more than 1-2 sentences per turn.
 
 {render_debate(debate, agent_name)}
 You: "
@@ -37,13 +40,8 @@ Answer: "
 
 def oneshot_prompt(question: str) -> str:
     prompt = F(f"""
-Who would be more likely to win a debate about: 
 "{question}"
-
-1. "Proponent"
-2. "Opponent"
-
-Answer: "
+Answer (only "Yes" or "No"):"
     """).strip()
     return prompt
 
