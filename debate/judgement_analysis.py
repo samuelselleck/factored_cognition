@@ -18,7 +18,7 @@
 from ice.recipe import recipe
 
 from recipe import debate as debate_question
-from prompt import quantitative_judgement_prompts, questions_prompt
+from prompt import debate_judgement_prompts, oneshot_prompt, questions_prompt
 
 
 async def judgement_analysis():
@@ -27,15 +27,25 @@ async def judgement_analysis():
                  .complete(prompt=prompt, stop="---")).split("\n")
     all_judgements = {}
     for question in questions:
-        res = await single_question_judgement(question)
-        all_judgements[question] = res
+        debate_res = await debate_judgement(question)
+        non_debate_res = await oneshot_judgement(question)
+        all_judgements[question] = {
+            "oneshot": non_debate_res,
+            "debate:": debate_res
+        }
     return all_judgements
 
 
-async def single_question_judgement(question: str) -> list[list[int]]:
+async def oneshot_judgement(question: str) -> str:
+    prompt = oneshot_prompt(question)
+    answer = await recipe.agent().complete(prompt=prompt, stop='"')
+    return answer
+
+
+async def debate_judgement(question: str) -> str:
     agent_names = ["Proponent", "Opponent"]
     debate = await debate_question(question, agent_names)
-    prompts = quantitative_judgement_prompts(debate, agent_names)
+    prompts = debate_judgement_prompts(debate, agent_names)
     results = []
     for p in prompts:
         answer = await recipe.agent().complete(prompt=p, stop='"')

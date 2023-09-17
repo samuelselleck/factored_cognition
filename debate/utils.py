@@ -1,3 +1,4 @@
+import itertools
 from typing import Optional
 from fvalues import F
 
@@ -19,3 +20,13 @@ def render_debate(debate: Debate, self_name: Optional[Name] = None) -> str:
             speaker = "You"
         debate_text += F(f'{speaker}: "{text}"\n')
     return debate_text.strip()
+
+
+def render_list_permutations(elements: list[str]):
+    perms = []
+    for elems in itertools.permutations(elements):
+        elem_str_list = "\n".join(
+            (f'{n + 1}:"{name}"' for n, name in enumerate(elems))
+        )
+        perms.append(elem_str_list)
+    return perms

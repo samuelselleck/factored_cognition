@@ -2,7 +2,7 @@ import itertools
 from fvalues import F
 
 from debate_types import Debate, Name
-from utils import render_debate
+from utils import render_debate, render_list_permutations
 
 
 def render_debate_prompt(agent_name: str, debate: Debate, turns_left: int) -> str:
@@ -17,12 +17,9 @@ You: "
     return prompt
 
 
-def quantitative_judgement_prompts(debate: Debate, agents: list[Name]) -> int:
+def debate_judgement_prompts(debate: Debate, agents: list[Name]) -> int:
     prompts = []
-    for agents in itertools.permutations(agents):
-        names = "\n".join(
-            (f'{n + 1}:"{name}"' for n, name in enumerate(agents))
-        )
+    for names in render_list_permutations(agents):
         prompt = F(
             f"""
 Debate:
@@ -36,6 +33,19 @@ Answer: "
 """).strip()
         prompts.append(prompt)
     return prompts
+
+
+def oneshot_prompt(question: str) -> str:
+    prompt = F(f"""
+Who would be more likely to win a debate about: 
+"{question}"
+
+1. "Proponent"
+2. "Opponent"
+
+Answer: "
+    """).strip()
+    return prompt
 
 
 def questions_prompt(num: int = 4) -> list[str]:
