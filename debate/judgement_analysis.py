@@ -21,7 +21,7 @@
 # - I couldn't see a very clear pattern in response differences
 #   between oneshot/debate answerers. The answer did however
 #   fluctuate considerably depending on precise wording in
-#   debate prompt/qustion prompt. I'd be interested in what
+#   debate prompt/qustion prompt. I'd be interested to know what
 #   you observed!
 
 from ice.recipe import recipe
