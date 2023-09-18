@@ -1,10 +1,10 @@
 
 # notes/questions/thoughts:
 
-# - Really hard to not let information symmetry
-#   in the queries affect the outcome (ordering, names etc.).
-#   Tried to avoid to some extend by choosing neutral names
-#   or doing douple queries (with switched order) - other methods?
+# - Hard to not let information asymmetry in the
+#   queries seemingly affect the outcome (ordering, names etc.).
+#   Tried to avoid to some extent by choosing neutral words
+#   or doing douple queries with switched order - other methods?
 
 # - Initially tried to get the judgement be a number (0-10).
 #   this did not work at all (almost always completed with 5).
